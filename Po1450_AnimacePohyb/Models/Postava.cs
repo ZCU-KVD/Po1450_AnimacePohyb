@@ -14,7 +14,9 @@
 		public int AktualniPozice { get; private set; } = -1;
 		private int Width { get;  }
 		private List<Pozice> PoziceList { get; set; } = new List<Pozice>();
-
+		
+		private bool smerVpred = true;
+		private bool HlavaVpravo { get; set; } = true;
 		public string Style
 		{
 			get
@@ -30,6 +32,8 @@
 				}
 			}
 		}
+
+		public string TransformRotateY => HlavaVpravo ? "transform: rotateY(0deg);" : "transform: rotateY(180deg)";
 		#endregion
 
 		#region Metody
@@ -41,7 +45,24 @@
 
 		public void Presun()
 		{
-			AktualniPozice += 1;
+			if (smerVpred)
+			{
+				if (AktualniPozice >= PoziceList.Count - 1)
+				{
+					smerVpred = false;
+				}
+			}
+			else
+			{
+				if (AktualniPozice == 0)
+				{
+					smerVpred = true;
+				}
+			}
+			var predchoziPozice = AktualniPozice;
+			AktualniPozice += smerVpred? 1 : -1;
+			if(predchoziPozice >= 0)
+				HlavaVpravo = PoziceList[predchoziPozice].PozX < PoziceList[AktualniPozice].PozX;
 		}
 		#endregion
 
